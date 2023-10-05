@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class StaticTypes{
@@ -9,7 +9,7 @@ public static class StaticTypes{
 
 
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class StaticTypes : MonoBehaviour{
@@ -24,7 +24,7 @@ public class StaticTypes : MonoBehaviour{
 
 
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class  : MonoBehaviour{

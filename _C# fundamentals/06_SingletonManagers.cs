@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SingletonManagers : MonoBehaviour{
@@ -33,7 +33,7 @@ public class SingletonManagers : MonoBehaviour{
 
 // Another script
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour{

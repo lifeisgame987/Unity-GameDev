@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Helper{
@@ -14,7 +14,7 @@ namespace Helper{
 
 
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class Utilities{
@@ -28,7 +28,7 @@ public static class Utilities{
 
 // Adding extension to predefined classes
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class Utilities{
@@ -43,7 +43,7 @@ public static class Utilities{
 
 // Another script
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 using Helper;

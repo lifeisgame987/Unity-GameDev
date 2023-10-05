@@ -1,0 +1,58 @@
+Managers
+    GameManager
+    SoundManager
+
+Player
+
+LevelHolder
+    TerrainHolder
+        AboveGround
+        SecretPassageOverlays
+        UnderGround
+    OrnamentHolder
+        Plants
+        Clutter
+        Animals
+    ActionHolder
+        Doors
+        Climable
+        Enemies
+        Collectibles
+        CratesAndBarrels
+        Interactive
+        Misc
+        NPC
+    WaterHolder
+    ForegroundHolder
+    BackgroundHolder
+    Effects
+        ParticlesFX
+        AtmosphericFX
+
+TriggersAndGizmos
+    LevelExit
+    LevelCollider
+    SpawnPoints
+    Points
+    CameraTriggers
+    MusicTriggers
+    DialogueTriggers
+    LightTriggers
+    Misc
+
+Cameras
+    MainCamera
+        OrthographicCam
+        PerspectiveFGCam
+        RadialTransitionCam
+        BackgroundLayers
+
+Lights
+    BackgroundAreaLight
+    TerrainAreaLight
+    BackingWallsLight
+    Torches
+    LightManager2D
+
+UI
+    Canvas

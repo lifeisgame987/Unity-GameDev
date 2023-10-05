@@ -1,23 +1,19 @@
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public interface Idamageable<T>{
-  
   void Damage(T damage);
-  
 }
 
 public interface Ihealable{
-  
   int health{get; set;}
-  
 }
 
 
 // Another script
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour, Idamageable<float>, Ihealable{
@@ -32,7 +28,7 @@ public class Player : MonoBehaviour, Idamageable<float>, Ihealable{
 
 // Another script
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour, Idamageable<int>{

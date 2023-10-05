@@ -1,10 +1,10 @@
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Properties : MonoBehaviour{
   
-  // Standard property
+  // Standard FIELD
   private int _myAge = 21;
   
   public int MyAge{
@@ -27,7 +27,7 @@ public class Properties : MonoBehaviour{
 
 // Another class
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour{

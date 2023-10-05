@@ -1,16 +1,16 @@
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class  : MonoBehaviour{
   
   
   
-  void Start(){
+  private void Start(){
     
   }
   
-  void Update(){
+  private void Update(){
     
   }
 }

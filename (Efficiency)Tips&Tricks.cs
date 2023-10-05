@@ -17,6 +17,9 @@ public class (Efficiency)Tips&Tricks : MonoBehaviour{
     // Singleton
   }
   
+  // If you want your object to receive events even in disabled
+  // stateChanged then subscribe/unsubscribe in Start/OnDestroy
+  // (Doubt) 
   void OnEnable(){
     // Subscribe delegates & events
   }

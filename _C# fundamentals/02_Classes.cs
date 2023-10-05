@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -20,7 +20,7 @@ public class Asl{
 
 // Another class
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour{

@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Enums : MonoBehaviour{
@@ -35,7 +35,7 @@ public class Enums : MonoBehaviour{
 
 // Another script
 using System.Collections;
-using System.Collections.Generics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnumExample : MonoBehaviour{
