@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour{
   public static GameManager Instance {get; private set;}
   
   public event EventHandler OnStateChanged;
+  public event EventHandler OnGamePaused;
+  public event EventHandler OnGameResumed;
   
   private State _state;
   public enum State{
@@ -16,12 +18,14 @@ public class GameManager : MonoBehaviour{
   }
   
   private float _countdownTimer = 3f;
+  private bool _isGamePaused = false;
   
   private void Awake(){
     Instance = this;
   }
   
   private void Start(){
+    InputManager.Instance.OnPauseAction += InputManager_OnPauseAction;
     ChangeState(State.Start);
   }
   
@@ -45,6 +49,10 @@ public class GameManager : MonoBehaviour{
     }
   }
   
+  private void InputManager_OnPauseAction(Object sender, System.EventArgs e){
+    TogglePause();
+  }
+  
   public bool IsStartState(){
     return _state == State.Start;
   }
@@ -65,6 +73,25 @@ public class GameManager : MonoBehaviour{
     if(_state == newState) return;
     _state = newState;
     OnStateChanged?.Invoke(this, EventArgs.Empty);
+  }
+  
+  private void TogglePause(){
+    _isGamePaused = !_isGamePaused;
+    if(_isGamePaused){
+      Time.timeScale = 0f;
+      OnGamePaused?.Invoke(this, EventArgs.Empty);
+    }
+    else{
+      Time.timeScale = 1f;
+      OnGameResumed?.Invoke(this, EventArgs.Empty);
+    }
+    // As the game play uses pause/resume system, scene changes will
+    // make the game potentially stay in pause, so we have to manually
+    // resume it in the first Scene (MainMenuScene)
+  }
+  
+  private void OnDestroy(){
+    InputManager.Instance.OnPauseAction -= InputManager_OnPauseAction;
   }
 }
 
