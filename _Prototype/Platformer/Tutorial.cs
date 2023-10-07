@@ -15,9 +15,13 @@ public class Player : MonoBehaviour{
   private bool _isGrounded;
   private bool _canJump;
   
+  private void Start(){
+    GM_Tutorial.Instance.OnStateChanged += GM_Tutorial_OnStateChanged;
+  }
+  
   private void Update(){
     _movementX = Input.GetAxisRaw("Horizontal");
-    _jumpPressed = Input.GeyKeyDown(KeyCode.Space);
+    _jumpPressed = Input.GetKeyDown(KeyCode.Space);
     float groundRadius = 2.0f
     _isGrounded = Physics2D.OverlapCircle(_groundCheck, groundRadius, _groundLayer);
   }
@@ -37,10 +41,25 @@ public class Player : MonoBehaviour{
   }
   
   private void OnTriggerEnter2D(Collider2D collider){
-    Trigger trigger = collider.GetComponent<Trigger>();
-    if(trigger != null){
-      trigger.OnTrigger();
+    BaseTrigger baseTrigger = collider.GetComponent<BaseTrigger>();
+    if(baseTrigger != null){
+      baseTrigger.OnTrigger();
     }
+    
+    Coin coin = collider.GetComponent<Coin>();
+    if(coin != null){
+      coin.OnCollect();
+    }
+  }
+  
+  private void GM_Tutorial_OnStateChanged(Object sender, System.EventArgs e){
+    if(GM_Tutorial.Instance.IsJumpUpActive()){
+      _canJump = true;
+    }
+  }
+  
+  private void OnDestroy(){
+    GM_Tutorial.Instance.OnStateChanged -= GM_Tutorial_OnStateChanged;
   }
 }
 
@@ -54,80 +73,228 @@ public class GM_Tutorial : MonoBehaviour{
   public event EventHandler OnStateChanged;
   
   private GameState _state;
-  public enum State{
-    Start,
-    AutoMove,
-    MoveRight,
-    MoveLeft,
-    JumpUp,
-    JumpDown,
-    Collect,
-  }
   
   private void Awake(){
     Instance = this;
   }
   
   private void Start(){
-    _state = State.Start;
+    _state = TutorialState.Start;
   }
   
   private void Update(){
     switch(_state){
-      case State.Start:
+      case TutorialState.Start:
         _countdownTimer -= Time.deltaTime;
         if(_countdownTimer < 0f){
-          _state = State.AutoMove;
+          _state = TutorialState.AutoMove;
           OnStateChanged?.Invoke(this, EventArgs.Empty);
         }
         break;
-      case State.AutoMove:
+      case TutorialState.AutoMove:
         break;
-      case State.MoveRight:
+      case TutorialState.MoveRight:
         break;
-      case State.MoveLeft:
+      case TutorialState.MoveLeft:
         break;
-      case State.JumpUp:
+      case TutorialState.JumpUp:
         break;
-      case State.JumpDown:
+      case TutorialState.JumpDown:
         break;
-      case State.Collect:
+      case TutorialState.Collect:
         break;
     }
   }
   
   public bool IsAutoMoving(){
-    return _state == State.AutoMove;
+    return _state == TutorialState.AutoMove;
   }
   
-  public void ChangeState(State newState){
+  public bool IsMoveRightActive(){
+    return _state == TutorialState.MoveRight;
+  }
+
+  public bool IsMoveLeftActive(){
+    return _state == TutorialState.MoveLeft;
+  }
+  
+  public bool IsJumpUpActive(){
+    return _state == TutorialState.JumpUp;
+  }
+  
+  public bool IsJumpDownActive(){
+    return _state == TutorialState.JumpDown;
+  }
+  
+  public void ChangeState(TutorialState newState){
     if(_state == newState) return;
     _state = newState;
     OnStateChanged?.Invoke(this, EventArgs.Empty);
   }
 }
+public enum TutorialState{
+  Start,
+  AutoMove,
+  MoveRight,
+  MoveLeft,
+  JumpUp,
+  JumpDown,
+  Collect,
+}
 
-// MoveRightTrigger
+
+// BaseTrigger
 using UnityEngine;
 
-public class Trigger : MonoBehaviour{
+public class BaseTrigger : MonoBehaviour{
   
-  [SerializeField] private GM_Tutorial.Instance.State _nextState;
-  
-  private void Start(){
+  protected void Start(){
     GM_Tutorial.Instance.OnStateChanged += GM_Tutorial_OnStateChanged;
     Hide();
   }
   
-  private void GM_Tutorial_OnStateChanged(Object sender, System.EventArgs e){
+  protected virtual void GM_Tutorial_OnStateChanged(Object sender, System.EventArgs e){
+    Debug.LogError("BaseTrigger.GM_Tutorial_OnStateChanged()");
+  }
+  
+  public virtual void OnTrigger(){
+    Debug.LogError("BaseTrigger.OnTrigger()");
+  }
+  
+  protected void Show(){
+    gameObject.SetActive(true);
+  }
+  
+  protected void Hide(){
+    gameObject.SetActive(false);
+  }
+  
+  protected void OnDestroy(){
+    GM_Tutorial.Instance.OnStateChanged -= GM_Tutorial_OnStateChanged;
+  }
+}
+
+
+// MoveRight_Trigger
+using UnityEngine;
+
+public class MoveRightTrigger : BaseTrigger{
+  
+  [SerializeField] private TutorialState _nextState; // TutorialState.MoveRight
+  
+  private override void GM_Tutorial_OnStateChanged(Object sender, System.EventArgs e){
     if(GM_Tutorial.Instance.IsAutoMoving()){
       Show();
     }
   }
   
-  public void OnTrigger(){
+  public override void OnTrigger(){
     GM_Tutorial.Instance.ChangeState(_nextState);
     Hide();
+  }
+}
+
+// MoveLeft_Trigger
+using UnityEngine;
+
+public class MoveLeftTrigger : BaseTrigger{
+  
+  [SerializeField] private TutorialState _nextState; // TutorialState.MoveLeft
+  
+  private override void GM_Tutorial_OnStateChanged(Object sender, System.EventArgs e){
+    if(GM_Tutorial.Instance.IsMoveRightActive()){
+      Show();
+    }
+  }
+  
+  public override void OnTrigger(){
+    GM_Tutorial.Instance.ChangeState(_nextState);
+    Hide();
+  }
+}
+
+// JumpUp_Trigger
+using UnityEngine;
+
+public class JumpUpTrigger : BaseTrigger{
+  
+  [SerializeField] private TutorialState _nextState; // TutorialState.JumpUp
+  
+  private override void GM_Tutorial_OnStateChanged(Object sender, System.EventArgs e){
+    if(GM_Tutorial.Instance.IsMoveLeftActive()){
+      Show();
+    }
+  }
+  
+  public override void OnTrigger(){
+    GM_Tutorial.Instance.ChangeState(_nextState);
+    Hide();
+  }
+}
+
+// JumpDown_Trigger
+using UnityEngine;
+
+public class JumpDownTrigger : BaseTrigger{
+  
+  [SerializeField] private TutorialState _nextState; // TutorialState.JumpDown
+  
+  private override void GM_Tutorial_OnStateChanged(Object sender, System.EventArgs e){
+    if(GM_Tutorial.Instance.IsJumpUpActive()){
+      Show();
+    }
+  }
+  
+  public override void OnTrigger(){
+    GM_Tutorial.Instance.ChangeState(_nextState);
+    Hide();
+  }
+}
+
+// JumpFinishedTrigger
+using UnityEngine;
+
+public class JumpFinishedTrigger : BaseTrigger{
+  
+  [SerializeField] private TutorialState _nextState; // TutorialState.Collect
+  
+  private override void GM_Tutorial_OnStateChanged(Object sender, System.EventArgs e){
+    if(GM_Tutorial.Instance.IsJumpDownActive()){
+      Show();
+    }
+  }
+  
+  public override void OnTrigger(){
+    GM_Tutorial.Instance.ChangeState(_nextState);
+    Hide();
+  }
+}
+
+
+// CoinHolder
+using UnityEngine;
+
+public class CoinHolder : MonoBehaviour{
+  
+  [SerializeField] private TutorialState _nextState; // TutorialState.
+  
+  private void Start(){
+    GM_Tutorial.Instance.OnStateChanged += GM_Tutorial_OnStateChanged;
+    Coin.OnAnyCoinCollect += Coin_OnAnyCoinCollect;
+    Hide();
+  }
+  
+  private void GM_Tutorial_OnStateChanged(Object sender, System.EventArgs e){
+    if(GM_Tutorial.Instance.IsCollectActive){
+      Show();
+    }
+  }
+  
+  private void Coin_OnAnyCoinCollected(Object sender, System.EventArgs e){
+    if(transform.childCount <= 0){
+      GM_Tutorial.Instance.ChangeState(_nextState);
+      Hide();
+    }
   }
   
   private void Show(){
@@ -139,22 +306,23 @@ public class Trigger : MonoBehaviour{
   }
 }
 
-// MoveLeftTrigger
+
+// Coin
 using UnityEngine;
 
-public class Trigger : MonoBehaviour{
+public class Coin : MonoBehaviour{
   
-  [SerializeField] private GameState _nextState; // MoveLeft
-  [SerializeField] private GameObject _nextTrigger; // JumpTrigger
-  
-  public void OnTrigger(){
-    GM_Tutorial.Instance.ChangeState(_nextState);
-    EnableNextTrigger();
-    DestroySelf();
+  public static event EventHandler OnAnyCoinCollect;
+  // For static fields/events (except class Instance, methods) 
+  // it doesn't get cleaned/destroyed/reset on scene changes,
+  // so we have to manually clean it in the MainMenu
+  public static void ResetStaticData(){
+    OnAnyCoinCollect = null;
   }
   
-  private void EnableNextTrigger(){
-    _nextTrigger?.SetActive(true);
+  public void OnCollect(){
+    OnAnyCoinCollect?.Invoke(this, EventArgs.Empty);
+    DestroySelf();
   }
   
   private void DestroySelf(){
@@ -162,71 +330,14 @@ public class Trigger : MonoBehaviour{
   }
 }
 
-// JumpUpTrigger
+
+// MainMenu -> ResetStaticDataManager
+// Cleaner script for static fields/events
 using UnityEngine;
 
-public class Trigger : MonoBehaviour{
+public class ResetStaticDataManager : MonoBehaviour{
   
-  [SerializeField] private GameState _nextState; // JumpUp
-  [SerializeField] private GameObject _nextTrigger; // JumpDownTrigger
-  
-  public void OnTrigger(){
-    GM_Tutorial.Instance.ChangeState(_nextState);
-    EnableNextTrigger();
-    DestroySelf();
-  }
-  
-  private void EnableNextTrigger(){
-    _nextTrigger?.SetActive(true);
-  }
-  
-  private void DestroySelf(){
-    Destroy(gameObject);
-  }
-}
-
-// JumpDownTrigger
-using UnityEngine;
-
-public class Trigger : MonoBehaviour{
-  
-  [SerializeField] private GameState _nextState; // JumpDown
-  [SerializeField] private GameObject _nextTrigger; // JumpFinishedTrigger
-  
-  public void OnTrigger(){
-    GM_Tutorial.Instance.ChangeState(_nextState);
-    EnableNextTrigger();
-    DestroySelf();
-  }
-  
-  private void EnableNextTrigger(){
-    _nextTrigger?.SetActive(true);
-  }
-  
-  private void DestroySelf(){
-    Destroy(gameObject);
-  }
-}
-
-// JumpFinishedTrigger
-using UnityEngine;
-
-public class Trigger : MonoBehaviour{
-  
-  [SerializeField] private GameState _nextState; // Collect
-  [SerializeField] private GameObject _nextTrigger; // 
-  
-  public void OnTrigger(){
-    GM_Tutorial.Instance.ChangeState(_nextState);
-    EnableNextTrigger();
-    DestroySelf();
-  }
-  
-  private void EnableNextTrigger(){
-    _nextTrigger?.SetActive(true);
-  }
-  
-  private void DestroySelf(){
-    Destroy(gameObject);
+  private void Awake(){
+    Coin.ResetStaticData();
   }
 }
