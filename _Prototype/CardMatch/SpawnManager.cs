@@ -28,7 +28,7 @@ public class SpawnManager : MonoBehaviour{
   
   private void SpawnCards(){
     for(int i=0; i<_cardsToSpawn.Count; i++){
-      Instantiate(_cardsToSpawn[i], _spawnPoints[i]);
+      Instantiate(_cardsToSpawn[i], _spawnPoints[i].position, Quoternion.identity);
     }
   }
   
