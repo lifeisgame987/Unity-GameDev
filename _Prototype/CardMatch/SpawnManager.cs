@@ -5,9 +5,10 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour{
   
   [SerializeField] private int _noOfUniqueCardsToSpawn;
-  [SerializeField, Tooltip("Size of this Array must be DOUBLE of _noOfUniqueCardsToSpawn")] 
-  private Transform[] _spawnPoints;
-  [SerializeField] private List<GameObject> _cards;
+  
+  [Header("Size of this Array must be DOUBLE of _noOfUniqueCardsToSpawn")]
+  [SerializeField] private Transform[] _spawnPoints;
+  [SerializeField] private List<CardSO> _cardsSO;
   
   private List<int> _cardIndices;
   private int _currentCardIndex;
@@ -20,6 +21,10 @@ public class SpawnManager : MonoBehaviour{
   }
   
   private void Start(){
+    if((_noOfUniqueCardsToSpawn*2) != _spawnPoints.Length){
+      Debug.LogError("_noOfUniqueCardsToSpawn doesn't match with _spawnPoints.Length");
+      return;
+    }
     AddCardIndices();
     AddCardsToSpawn();
     Shuffle(_cardsToSpawn);
@@ -34,8 +39,8 @@ public class SpawnManager : MonoBehaviour{
   
   private void AddCardsToSpawn(){
     for(int i=0; i<_cardIndices.Count; i++){
-      _cardsToSpawn.Add(_cards[_cardIndices[i]]);
-      _cardsToSpawn.Add(_cards[_cardIndices[i]]);
+      _cardsToSpawn.Add(_cardsSO[_cardIndices[i]].Prefab);
+      _cardsToSpawn.Add(_cardsSO[_cardIndices[i]].Prefab);
     }
   }
   

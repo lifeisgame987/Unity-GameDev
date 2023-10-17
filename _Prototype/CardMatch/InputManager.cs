@@ -6,14 +6,26 @@ public class InputManager : MonoBehaviour{
   
   public static InputManager Instance {get; private set}
   
+  private Vector2 _mousePosition;
+  private bool _isMouseClicked;
+  
   private void Awake(){
-    if(Instance != null){
-      Destroy(gameObject);
-    }
     Instance = this;
   }
   
+  private void Update(){
+    _isMouseClicked = Input.GetMouseButtonDown(0);
+    
+    if(_isMouseClicked){
+      _mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    }
+  }
+  
+  public bool IsMouseClicked(){
+    return _isMouseClicked;
+  }
+  
   public Vector2 GetInputPosition(){
-    return Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    return _mousePosition;
   }
 }

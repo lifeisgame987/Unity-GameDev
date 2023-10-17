@@ -36,7 +36,7 @@ public class Player : MonoBehaviour{
   
   private void Update(){
     if(Input.GetMouseButtonDown(0)){
-      Vector2 position = InputManager.Instance.GetInputPositiin();
+      Vector2 position = InputManager.Instance.GetInputPosition();
       
       float colRadius = 0.2f
       Collider2D col = Physics2D.OverlapCircle(position, colRadius, _cardLayer);

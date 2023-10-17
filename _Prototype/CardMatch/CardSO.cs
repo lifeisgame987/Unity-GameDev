@@ -6,7 +6,6 @@ using UnityEngine;
 public class CardSO : ScriptableObject{
   
   public int Id;
-  public Sprite CardSprite;
-  public GameObject CardPrefab
+  public GameObject Prefab
   
 }
