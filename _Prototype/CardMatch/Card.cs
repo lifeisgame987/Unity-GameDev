@@ -1,33 +1,49 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Card : MonoBehaviour{
   
+  private const string OPEN_CARD = "IsOpened";
+  private const string IS_OPENED = "Opened";
+  private const string IS_CLOSED = "Closed";
+  
   [SerializeField] private CardSO _cardSO;
-  [SerializeField] private LayerMask _cardLayer;
-  [SerializeField] private Collider2D _col;
+  
   public int CardId {get; private set;}
+  private Animator _animator;
+  
+  private bool _isOpened;
+  private bool _isClosed;
+  
+  private void Awake(){
+    _animator = GetComponent<Animator>();
+  }
   
   private void Start(){
     CardId = _cardSO.Id;
   }
   
-  private void OnEnable(){
-    Player.Instance.OnCardSame += Player_OnCardSame;
+  private void Update(){
+    _isOpened = _animator.GetCurrentAnimatorStateInfo(0).IsName(IS_OPENED);
+    _isClosed = _animator.GetCurrentAnimatorStateInfo(0).IsName(IS_CLOSED);
   }
   
-  private void OnDisable(){
-    Player.Instance.OnCardSame -= Player_OnCardSame;
+  public void OpenCard(){
+    _animator.SetBool(OPEN_CARD, true);
   }
   
-  private void Player_OnCardSame(Object sender, Player.OnCardSameEventArgs e){
-    if(CardId == e.CardId){
-      DestroySelf();
-    }
+  public void CloseCard(){
+    _animator.SetBool(OPEN_CARD, false);
   }
   
-  private void DestroySelf(){
+  public bool IsOpened(){
+    return _isOpened;
+  }
+  
+  public bool IsClosed(){
+    return _isClosed;
+  }
+  
+  public void DestroySelf(){
     Destroy(gameObject);
   }
 }
