@@ -15,6 +15,8 @@ public class SpawnManager : MonoBehaviour{
   
   private List<GameObject> _cardsToSpawn;
   
+  private bool canSpawn = true;
+  
   private void Awake(){
     _cardIndices = new List<int>();
     _cardsToSpawn = new List<GameObject>();
@@ -22,7 +24,7 @@ public class SpawnManager : MonoBehaviour{
   
   private void Start(){
     if((_noOfUniqueCardsToSpawn*2) != _spawnPoints.Length){
-      Debug.LogError("_noOfUniqueCardsToSpawn doesn't match with _spawnPoints.Length");
+      Debug.LogError("noOfUniqueCardsToSpawn doesn't match with spawnPoints.Length");
       return;
     }
     AddCardIndices();
@@ -31,9 +33,23 @@ public class SpawnManager : MonoBehaviour{
     SpawnCards();
   }
   
+  private void Update(){
+    if(canSpawn && Game_Manager.Instance.IsGameplayState()){
+      canSpawn = false;
+      ActivateCards();
+    }
+  }
+  
+  private void ActivateCards(){
+    for(int i=0; i<_cardsToSpawn.Count; i++){
+      _cardsToSpawn[i].SetActive(true);
+    }
+  }
+  
   private void SpawnCards(){
     for(int i=0; i<_cardsToSpawn.Count; i++){
-      Instantiate(_cardsToSpawn[i], _spawnPoints[i].position, Quoternion.identity);
+      _cardsToSpawn[i].SetActive(false);
+      Instantiate(_cardsToSpawn[i], _spawnPoints[i].position, Quaternion.identity);
     }
   }
   

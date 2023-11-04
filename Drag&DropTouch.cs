@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generics;
 using UnityEngine;
 
-public class Drag&Drop : MonoBehaviour{
+public class Drag&DropTouch : MonoBehaviour{
   
   private bool moveAllowed = false;
   private Collider2D collider;
