@@ -1,3 +1,4 @@
+// huge bug with respect to parent event that leads to child event timings wrong
 using UnityEngine;
 using UnityEngine.UI;
 
